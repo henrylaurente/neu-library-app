@@ -4,7 +4,7 @@ A full-stack web application for managing NEU Library visitor statistics with se
 
 ## Features
 
-- **Secure Google OAuth Login**: Only authorized NEU staff (jcesperanza@neu.edu.ph) can access the system
+- **Secure Google OAuth Login**: Only authorized NEU staff can access the system
 - **Role-Based Access Control**: Users can switch between user and admin roles
 - **User Dashboard**: Welcome page for regular users
 - **Admin Dashboard**: Comprehensive visitor statistics with filtering capabilities
