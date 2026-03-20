@@ -290,7 +290,7 @@ For technical support or questions, please contact:
 ## Live Application
 
 The application is deployed and available at:
-- **Production**: (https://neulibapp-2hvv8ns4.manus.space)
+- **Production**: https://neulibapp-2hvv8ns4.manus.space
 - **GitHub Repository**: https://github.com/henrylaurente/neu-library-app
 
 ---
