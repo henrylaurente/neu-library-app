@@ -190,7 +190,7 @@ All endpoints are protected with JWT authentication via HTTP-only cookies.
 
 ## Security Features
 
-- **Email Restriction**: Only jcesperanza@neu.edu.ph can access the system
+- **Email Restriction**: Only staff can access the system
 - **JWT Tokens**: Secure token-based authentication
 - **HTTP-Only Cookies**: Tokens stored securely, not accessible via JavaScript
 - **Role-Based Access Control**: Admin-only endpoints protected with role checks
@@ -232,7 +232,6 @@ The application is configured to deploy on Manus hosting platform. To deploy:
 
 The application enforces strict email validation. Only the following email can access the system:
 
-- `jcesperanza@neu.edu.ph`
 
 Any login attempt with a different email will be rejected.
 
