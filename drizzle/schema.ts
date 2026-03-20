@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, datetime } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -13,10 +13,13 @@ export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
   /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
+  /** Google OAuth identifier */
+  googleId: varchar("googleId", { length: 255 }).unique(),
   name: text("name"),
-  email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  loginMethod: varchar("loginMethod", { length: 64 }).default("google"),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  currentRole: mysqlEnum("currentRole", ["user", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
@@ -25,4 +28,17 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+/**
+ * Visitor log table for tracking library visits
+ */
+export const visitorLogs = mysqlTable("visitorLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  date: datetime("date").notNull(),
+  reason: varchar("reason", { length: 255 }).notNull(), // e.g., "Study", "Research", "Borrowing Books"
+  college: varchar("college", { length: 255 }).notNull(), // e.g., "College of Engineering", "College of Arts"
+  employeeType: mysqlEnum("employeeType", ["teacher", "staff", "non-employee"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type VisitorLog = typeof visitorLogs.$inferSelect;
+export type InsertVisitorLog = typeof visitorLogs.$inferInsert;
