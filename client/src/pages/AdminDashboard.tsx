@@ -23,7 +23,7 @@ export default function AdminDashboard() {
     {
       reason: filters.reason || undefined,
       college: filters.college || undefined,
-      employeeType: (filters.employeeType as any) || undefined,
+      employeeType: (filters.employeeType && filters.employeeType !== "all" ? filters.employeeType : undefined) as any,
       startDate: filters.startDate ? new Date(filters.startDate) : undefined,
       endDate: filters.endDate ? new Date(filters.endDate) : undefined,
     },
@@ -174,7 +174,7 @@ export default function AdminDashboard() {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Types</SelectItem>
+                    <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="teacher">Teacher</SelectItem>
                     <SelectItem value="staff">Staff</SelectItem>
                     <SelectItem value="non-employee">Non-employee</SelectItem>
