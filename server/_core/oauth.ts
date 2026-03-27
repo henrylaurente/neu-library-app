@@ -1,8 +1,9 @@
-import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import type { Express, Request, Response } from "express";
 import * as db from "../db";
 import { getSessionCookieOptions } from "./cookies";
 import { sdk } from "./sdk";
+import { isAllowedEmail } from "../routers";
+import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 
 function getQueryParam(req: Request, key: string): string | undefined {
   const value = req.query[key];
@@ -28,13 +29,28 @@ export function registerOAuthRoutes(app: Express) {
         return;
       }
 
+      // Email validation
+      if (!userInfo.email || !isAllowedEmail(userInfo.email)) {
+        res.status(403).json({ error: "Access denied. Only authorized NEU staff can access this system." });
+        return;
+      }
+
       await db.upsertUser({
         openId: userInfo.openId,
         name: userInfo.name || null,
-        email: userInfo.email || "unknown@example.com",
+        email: userInfo.email,
         loginMethod: userInfo.loginMethod ?? userInfo.platform ?? null,
         lastSignedIn: new Date(),
+        // Set role to admin if email is in allowed list
+        role: isAllowedEmail(userInfo.email) ? "admin" : "user",
       });
+
+      // Set currentRole to admin for allowed emails
+      const user = await db.getUserByOpenId(userInfo.openId);
+      if (user) {
+        const currentRole = isAllowedEmail(userInfo.email) ? "admin" : "user";
+        await db.updateUserRole(user.id, currentRole);
+      }
 
       const sessionToken = await sdk.createSessionToken(userInfo.openId, {
         name: userInfo.name || "",

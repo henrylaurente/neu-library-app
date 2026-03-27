@@ -6,7 +6,17 @@ import { z } from "zod";
 import * as db from "./db";
 import { TRPCError } from "@trpc/server";
 
-const ALLOWED_EMAIL = "jcesperanza@neu.edu.ph";
+const ALLOWED_EMAILS = ["jcesperanza@neu.edu.ph", "henry.laurentejr@neu.edu.ph"];
+
+function isAllowedEmail(email: string): boolean {
+  return ALLOWED_EMAILS.includes(email);
+}
+
+// Middleware to check allowed emails
+const emailRestrictedProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  // This will be checked in OAuth callback
+  return next();
+});
 
 export const appRouter = router({
   system: systemRouter,
@@ -99,7 +109,18 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         return db.createVisitorLog(input);
       }),
+    recent: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (!ctx.user || ctx.user.currentRole !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Only admins can view visitor logs" });
+        }
+        // Get visitor logs from the last 24 hours
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        return db.getVisitorStats({ startDate: yesterday });
+      }),
   }),
 });
 
+export { isAllowedEmail };
 export type AppRouter = typeof appRouter;
