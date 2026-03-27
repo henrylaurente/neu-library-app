@@ -276,23 +276,10 @@ The admin dashboard provides comprehensive visitor analytics:
 
 This is a closed project for NEU Library. For issues or feature requests, please contact the development team.
 
-## License
-
-MIT License - See LICENSE file for details
-
-## Support
-
-For technical support or questions, please contact:
-- Email: support@neu.edu.ph
-- GitHub Issues: https://github.com/henrylaurente/neu-library-app/issues
-
 ## Live Application
 
 The application is deployed and available at:
 - **Production**: https://neulibapp-2hvv8ns4.manus.space
 - **GitHub Repository**: https://github.com/henrylaurente/neu-library-app
 
----
 
-**Last Updated**: March 20, 2026
-**Version**: 1.0.0
